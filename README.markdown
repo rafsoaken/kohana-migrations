@@ -2,6 +2,18 @@
 
 This Kohana module provides simple migrations from the command line for SQL compliant databases.
 
+# Installation (for Kohana v3.x)
+
+Put the migrations module in your modules path (after downloading as archive or cloning via git / git submodules -> see [Kohana and git](http://kohanaframework.org/guide/tutorials.git))
+
+Enable it in your bootstrap.php by adding a line to the array in the Kohana::modules() call:
+
+    Kohana::modules(array(
+        ...
+        'migrations'  => MODPATH.'migrations',           // Kohana v3.x migrations module  
+    )); 
+
+
 # Using
 
 Create a folder named "migrations" in your application folder.
@@ -23,7 +35,7 @@ Then you can run them from the command line:
 
 ## Status
 
-	jmhobbs@katya:/var/www/qaargh$ php5 index.php migrations
+	jmhobbs@katya:/var/www/qaargh$ php5 index.php --uri=migrations
 
 	=======================[ Kohana Migrations ]=======================
 
@@ -35,7 +47,7 @@ Then you can run them from the command line:
 
 ## Up
 
-	jmhobbs@katya:/var/www/qaargh$ php5 index.php migrations/up/3
+	jmhobbs@katya:/var/www/qaargh$ php5 index.php --uri=migrations/up/3
 
 	=======================[ Kohana Migrations ]=======================
 
@@ -63,7 +75,7 @@ Then you can run them from the command line:
 
 ## Down
 
-	jmhobbs@katya:/var/www/qaargh$ php5 index.php migrations/down/0
+	jmhobbs@katya:/var/www/qaargh$ php5 index.php --uri=migrations/down/0
 
 	=======================[ Kohana Migrations ]=======================
 
