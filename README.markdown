@@ -9,7 +9,7 @@ The versioning information can be file or table based.
 
 Put the migrations module in your modules path (after downloading as archive or cloning via git / git submodules -> see [Kohana and git](http://kohanaframework.org/guide/tutorials.git))
 
-Enable it in your bootstrap.php by adding a line to the array in the Kohana::modules() call:
+Enable it in your bootstrap.php by adding a key-value pair to the array in the Kohana::modules() call:
 
     Kohana::modules(array(
         ...
@@ -43,11 +43,9 @@ Then you can run them from the command line:
 	jmhobbs@katya:/var/www/qaargh$ php5 index.php --uri=migrations
 
 	=======================[ Kohana Migrations ]=======================
-
-	    Current Migration: 7
-	     Latest Migration: 7
-
-	===================================================================
+  Current Migration: 7
+  Latest Migration: 7
+	==============================================================
 
 
 ## Up
@@ -55,27 +53,19 @@ Then you can run them from the command line:
 	jmhobbs@katya:/var/www/qaargh$ php5 index.php --uri=migrations/up/3
 
 	=======================[ Kohana Migrations ]=======================
-
-	   Current Migration: 0
-	    Latest Migration: 7
-
-	===================================================================
-
-	  Requested Migration: 3
-	            Migrating: UP
-
-	===================================================================
-
+  Current Migration: 0
+  Latest Migration: 7
+	==============================================================
+  Requested Migration: 3
+  Migrating: UP
+	==============================================================
 	Migrated: 001_Auth_UP.sql
 	Migrated: 002_Users_UP.sql
 	Migrated: 003_Island_UP.sql
-
-	===================================================================
-
-	    Current Migration: 3
-	     Latest Migration: 7
-
-	===================================================================
+	==============================================================
+  Current Migration: 3
+  Latest Migration: 7
+	==============================================================
 
 
 ## Down
@@ -83,27 +73,19 @@ Then you can run them from the command line:
 	jmhobbs@katya:/var/www/qaargh$ php5 index.php --uri=migrations/down/0
 
 	=======================[ Kohana Migrations ]=======================
-
-	    Current Migration: 3
-	     Latest Migration: 7
-
-	===================================================================
-
-	  Requested Migration: 0
-	            Migrating: DOWN
-
-	===================================================================
-
+  Current Migration: 3
+  Latest Migration: 7
+	==============================================================
+  Requested Migration: 0
+  Migrating: DOWN
+	==============================================================
 	Migrated: 003_Island_DOWN.sql
 	Migrated: 002_Users_DOWN.sql
 	Migrated: 001_Auth_DOWN.sql
 
-	===================================================================
-
-	    Current Migration: 0
-      Latest Migration: 7
-
-	===================================================================
+  Current Migration: 0
+  Latest Migration: 7
+	==============================================================
 
 # Migrations Table
 

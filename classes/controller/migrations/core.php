@@ -87,7 +87,7 @@ class Controller_Migrations_Core extends Controller {
                 $this->migrations->migrate( $this, $current_version, $version );
             }
         }
-
+        $this->out();
         $this->_print_status();
     }
 
