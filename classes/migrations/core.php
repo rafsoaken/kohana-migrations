@@ -86,7 +86,7 @@ class Migrations_Core {
                     $this->migrations_table,
                     array('id', 'filename')
                 )
-                ->values(array($version, $filename))
+                ->values(array($version, basename($filename)))
                 ->execute();
             return;
         }
@@ -199,8 +199,10 @@ class Migrations_Core {
 
         foreach( $queries as $query )
         {
-            if( empty( $query ) ) { continue; }
-
+            if( ! trim( $query ) )
+            {
+                continue;
+            }
             DB::query( NULL, $query )->execute();
         }
 

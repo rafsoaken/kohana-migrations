@@ -3,6 +3,8 @@
 class Controller_Migrations_Core extends Controller {
 
     protected $separator;
+    public $allow_from_controller = NULL;
+    public $allow_from_action = NULL;
 
     public function __construct (Kohana_Request $request)
     {
@@ -10,8 +12,26 @@ class Controller_Migrations_Core extends Controller {
 
         $this->separator = str_pad("\n", 68, '=', STR_PAD_LEFT);
 
-        // Command line access ONLY
-        if( ! Kohana::$is_cli ) { die('No web access'); }
+        // Allow command line access or invocation from allowed controller (eg. as HMVC request)
+        if( Kohana::$is_cli
+            OR
+            (
+              !is_null($this->allow_from_controller) //there is a controller from which we allow invocation
+              AND
+              (
+               $this->allow_from_controller == @Request::$instance->controller  //this controller comes from the main request
+               AND  //allows for just one action of this controller or all actions (if $allow_from_action is NULL)
+               (is_null($this->allow_from_action) OR $this->allow_from_controller == @Request::$instance->action)
+              )
+            )
+          )
+        {
+            // ok, we can continue
+        }
+        else
+        {
+            die('No access!');
+        }
 
         $this->stdout = fopen( 'php://stdout', 'w' );
         $this->out( "\n=======================[ Kohana Migrations ]=======================\n" );
