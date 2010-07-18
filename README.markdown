@@ -2,6 +2,9 @@
 
 This Kohana module provides simple migrations from the command line for SQL compliant databases.
 
+The versioning information can be file or table based.
+
+
 # Installation (for Kohana v3.x)
 
 Put the migrations module in your modules path (after downloading as archive or cloning via git / git submodules -> see [Kohana and git](http://kohanaframework.org/guide/tutorials.git))
@@ -19,6 +22,8 @@ Enable it in your bootstrap.php by adding a line to the array in the Kohana::mod
 Create a folder named "migrations" in your application folder.
 
 Put valid SQL files in that folder, following the naming patterns: 001_ANYTHING_HERE_UP.sql & 001_ANYTHING_HERE_DOWN.sql
+
+** DO NOT START WITH 000 but 001, or this migration will not work (The base version the migrations module assumes to be in is 0. Thus it will neither execute UP nor DOWN migrations to reach this version.)
 
 For example:
 
@@ -96,9 +101,24 @@ Then you can run them from the command line:
 	===================================================================
 
 	    Current Migration: 0
-	     Latest Migration: 7
+      Latest Migration: 7
 
 	===================================================================
+
+# Migrations Table
+
+If you want to use a table to track the version changes to your database, you can!
+
+Just specify the key 'use_migrations_table' as TRUE in the migrations config file and it will look for a table named 'migrations' in your database.
+
+The structure of this table is as follows:
+
+    CREATE TABLE IF NOT EXISTS `migrations` (
+        `id` int(11) NOT NULL,
+        `filename` varchar(255) COLLATE utf8_swedish_ci NOT NULL,
+        PRIMARY KEY (`id`)
+    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+
 
 # License
 

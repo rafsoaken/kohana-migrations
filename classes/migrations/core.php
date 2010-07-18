@@ -4,6 +4,8 @@ class Migrations_Core {
 
     protected $config;
     protected $group;
+    protected $use_table;
+    protected $migrations_table = 'migrations';
 
     public function __construct( $group = 'default' )
     {
@@ -11,10 +13,22 @@ class Migrations_Core {
         $this->group  = $group;
         $this->config['path'] = $this->config['path'][$group];
         $this->config['info'] = $this->config['path'] . $this->config['info'] . '/';
+        $this->use_table = $this->config['use_migrations_table'];
+
+        Database::instance( $this->group )->connect();
     }
 
     public function get_schema_version ()
     {
+        if( $this->use_table )
+        {
+            $last_migration = array_shift(DB::select('id')->from($this->migrations_table)
+                ->limit(1)->order_by('id', 'desc')
+                ->execute()->as_array());
+
+            return (int)@$last_migration['id'];
+        }
+
         if( ! is_dir( $this->config['path'] ) )
             mkdir( $this->config['path'] );
 
@@ -37,8 +51,37 @@ class Migrations_Core {
         return 0;
     }
 
-    public function set_schema_version ( $version )
+    public function table_version_exists( $version )
     {
+        return (bool) count(
+                DB::select('id')->from($this->migrations_table)
+                    ->limit(1)->where('id', '=', $version)
+                    ->execute()->as_array()
+            );
+    }
+
+    public function table_delete_versions( $version )
+    {
+        DB::delete($this->migrations_table)
+            ->where('id', '>', $version-1)
+            ->execute();
+    }
+
+
+    public function set_schema_version ( $version, $filename='' )
+    {
+        if( $this->use_table )
+        {
+            $this->table_delete_versions( $version );
+            DB::insert(
+                    $this->migrations_table,
+                    array('id', 'filename')
+                )
+                ->values(array($version, $filename))
+                ->execute();
+            return;
+        }
+
         $fversion = fopen( $this->config['info'] . 'version', 'w' );
         fwrite( $fversion, $version );
         fclose( $fversion );
@@ -97,7 +140,7 @@ class Migrations_Core {
             		try
                     {
             			$controller->out( $this->run_migration( $migration ) );
-            			$this->set_schema_version( $index );
+            			$this->set_schema_version( $index, $migration );
             		}
             		catch( Exception $e )
                     {
@@ -121,7 +164,7 @@ class Migrations_Core {
             		try
                     {
             			$controller->out( $this->run_migration( $item ) );
-            			$this->set_schema_version( $index - 1 );
+            			$this->set_schema_version( $index - 1, $item );
             		}
             		catch( Exception $e )
                     {
@@ -141,8 +184,6 @@ class Migrations_Core {
 
         $contents = file_get_contents( $file );
         $queries = explode( ';', $contents );
-
-        Database::instance( $this->group )->connect();
 
         foreach( $queries as $query )
         {

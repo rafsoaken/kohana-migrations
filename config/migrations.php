@@ -13,8 +13,14 @@ return array
         'default' => APPPATH . 'migrations/',
     ),
 
+
     /**
-    * Subdirectory to store meta-information about the state of the migrations.
+    * If true use a table to store the version information instead of flat file
+    */
+    'use_migrations_table' => True,
+
+    /**
+    * Subdirectory to store meta-information about the state of the migrations (if file based).
     */
 	'info' =>  '.info'
 );
