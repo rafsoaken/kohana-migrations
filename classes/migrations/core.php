@@ -18,6 +18,11 @@ class Migrations_Core {
         Database::instance( $this->group )->connect();
     }
 
+    public function set_migrations_table( $name )
+    {
+        $this->migrations_table = $name;
+    }
+
     public function get_schema_version ()
     {
         if( $this->use_table )
@@ -73,6 +78,10 @@ class Migrations_Core {
         if( $this->use_table )
         {
             $this->table_delete_versions( $version );
+
+            if ( $version === 0 )
+                return;
+                
             DB::insert(
                     $this->migrations_table,
                     array('id', 'filename')
