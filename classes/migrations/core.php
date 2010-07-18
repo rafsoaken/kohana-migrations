@@ -81,7 +81,7 @@ class Migrations_Core {
 
             if ( $version === 0 )
                 return;
-                
+
             DB::insert(
                     $this->migrations_table,
                     array('id', 'filename')
@@ -187,11 +187,14 @@ class Migrations_Core {
         }
     }
 
+    public function read_file( $file )
+    {
+        return file_get_contents( $file );
+    }
 
     public function run_migration ( $file )
     {
-
-        $contents = file_get_contents( $file );
+        $contents = $this->read_file($file);
         $queries = explode( ';', $contents );
 
         foreach( $queries as $query )
